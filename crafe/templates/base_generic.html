@@ -1,0 +1,55 @@
+{# Base template for a regular page.
+ #
+ # Variables:
+ #   - head_title: Title of the page, to be used in the head title tag.
+ #   - head_description: Description of the page, to be used in description
+ #       meta tag.
+ #   - js_srcs: List of js files to load.
+ #   - css_srcs: List of css files to load.
+ #   - rss_feed: [optional] URL to the RSS.
+ #   - page_name: identifier of the page, it will be used as id for the body
+ #       tag.
+-#}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml' dir='ltr'>
+<head>
+	<title>
+    {%- block head_title -%}
+      {{ _('Crafe - Administration')|e }}
+    {%- endblock -%}
+  </title>
+	<meta name='description' content='
+      {%- block head_description -%}
+        {{ _('An administration page of Crafe.')|e }}
+      {%- endblock -%}
+      ' />
+	<link rel='shortcut icon' type='image/x-icon'
+	    href='/favicon.ico?v={{ version }}' />
+	{% for js_src in js_srcs %}
+    <script type='text/javascript' src='{{ js_src }}?v={{ version }}'></script>
+  {% endfor %}
+	{% for css_src in css_srcs %}
+    <link rel="stylesheet" type="text/css" href="{{ css_src }}?v={{ version }}"
+        />
+  {% endfor %}
+  {% if rss_feed %}
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0"
+        href="{{ rss_feed }}" />
+  {% endif %}
+</head> 
+<body id='{{ page_name }}'>
+  {% block inner_body %}
+    {% block header %}
+    {% endblock %}
+
+    {% block outer_wrapper %}
+      <div class='wrapper'>
+        {% block inner_wrapper %}
+        {% endblock %}
+      </div>
+    {% endblock %}
+
+    {% block footer %}
+    {% endblock %}
+  {% endblock %}
+</body>

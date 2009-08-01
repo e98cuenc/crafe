@@ -1,0 +1,22 @@
+# Spanish translations for PROJECT.
+# Copyright (C) 2009 Kigui Inc.
+# This file is distributed under the same license as the PROJECT project.
+# Joaquin Cuenca Abela <e98cuenc@gmail.com>, 2009.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Mesa 1.0\n"
+"Report-Msgid-Bugs-To: e98cuenc+nospam@gmail.com\n"
+"POT-Creation-Date: 2009-08-01 16:09+0200\n"
+"PO-Revision-Date: 2009-08-01 16:13+0200\n"
+"Last-Translator: Joaquin Cuenca Abela <e98cuenc@gmail.com>\n"
+"Language-Team: es <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 0.9.4\n"
+
+msgid "Hello"
+msgstr "Hola"
+

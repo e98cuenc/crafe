@@ -1,0 +1,26 @@
+- Download and install python2.5.
+
+- Download and install setuptools (http://pypi.python.org/pypi/setuptools): http://pypi.python.org/packages/2.5/s/setuptools/setuptools-0.6c9.win32-py2.5.exe#md5=602d06054ec1165e995ae54ac30884d7
+
+- Add C:\Python25\Scripts to your PATH
+
+- In a command line execute:
+easy_install Jinja2
+easy_install web.py
+easy_install Babel
+
+- Create PO file:
+pybabel extract -o i18n/messages.po --no-location \
+  --copyright-holder="Kigui Inc." \
+  --msgid-bugs-address="e98cuenc+nospam@gmail.com" \
+  --mapping=i18n/mapping.ini \
+  templates
+
+- Create new language:
+pybabel init -i i18n/messages.po -d i18n -l pt_BR
+
+- Compile catalog:
+pybabel compile -d i18n
+
+- Update catalogss:
+pybabel update -i i18n/messages.po -d i18n
