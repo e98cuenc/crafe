@@ -8,6 +8,9 @@
 easy_install Jinja2
 easy_install web.py
 easy_install Babel
+easy_install simplejson
+easy_install Paste
+easy_install nose
 
 - Create PO file:
 pybabel extract -o i18n/messages.po --no-location \
@@ -24,3 +27,9 @@ pybabel compile -d i18n
 
 - Update catalogss:
 pybabel update -i i18n/messages.po -d i18n
+
+- To start the web server:
+python controller.py
+
+- To run the unit tests:
+nosetests

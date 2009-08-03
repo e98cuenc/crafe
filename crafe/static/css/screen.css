@@ -1,0 +1,36 @@
+body {
+  font-family: Tahoma, sans-serif;
+  font-size: 10pt;
+  background-color: #fc6;
+}
+p.note {
+  color: #555;
+  margin: 0.2em 0 0.6em 0;
+  font-size: 80%;
+}
+
+/* home page */
+#index div {
+  margin: 1em;
+}
+#index .form-entry input, #index .form-entry textarea {
+  width: 400px;
+}
+#index .small-form-entry label {
+  display: inline-block;
+  width: 8em;
+}
+#index .small-form-entry input {
+  width: 200px;
+}
+#index fieldset {
+  border-width: 1px 0 0 0;
+  width: 420px;
+}
+#index legend {
+  font-weight: bold;
+}
+#index .bottom-form-buttons {
+  text-align: center;
+  width: 420px;
+}

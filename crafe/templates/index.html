@@ -1,5 +1,118 @@
-{% extends "base_generic.html" %}
+{# ATTENTION: Use the prefix "__crafe-" for the IDs of all the tags in this
+ # page to prevent any collision from the IDs of the elements loaded
+ # dynamically from third-party sites.
+ #}
+{% extends 'base_generic.html' %}
 {% block inner_wrapper %}
-  {{ _("Hello hello") }}, {{ page_name }}.
-{% endblock %}
+  <h2>Rules to get the article(s)</h2>
+  <form method='post' action='/do/save-articles-rules'>
+    <div class='form-entry'>
+      <label for='url-list-articles'>
+        URL to the pages containing the article(s) or the link(s) to the
+        article(s):
+      </label>
+      <p class='note'>
+        Ex.: http://www.loquo.com/cs/vivienda/pisos-en-alquiler-particular/300?p=%d<br />
+        (%d will be substituted by 0 .. 100. Use a different line for each
+        URL.)
+      </p>
+      <textarea name='url-list-articles'></textarea>
+    </div>
 
+    <div class='form-entry'>
+      <label for='css_article'>
+        CSS expression to match the link to the article(s):
+      </label>
+      <p class='note'>
+        Ex.: table.lq_unsup td div div a<br />
+        (Let it empty if there are no individual pages for each article.)
+      </p>
+      <input type='text' name='css_article' />
+    </div>
+
+    <div class='form-entry'>
+      <label for="common-css">
+        CSS expression common to all the data in the article(s):
+      </label>
+      <p class='note'>
+        Ex.: body > table td > div > div
+      </p>
+      <input type='text' name='common-css' />
+    </div>
+
+    <div class='form-entry'>
+      <label for="qps">
+        Maximum number of pages per second to crawle:
+      </label>
+      <p class='note'>
+        Ex.: 0.5
+        (Only go over 1 for high volume sites.)
+      </p>
+      <input type='text' name='qps' value='1' />
+    </div>
+
+    <input type='hidden' name='css-rules-name-to-use'
+        id='css-rules-name-to-use' />
+
+    <fieldset>
+      <legend>CSS path to extract the attributes of the article(s)</legend>
+      <p class='note'>
+        The first match will be automatically shown as an example
+      </p>
+
+      <div class='small-form-entry'>
+        <label for='price'>Price:</label>
+        <input type='text' name='price'>
+        <span class='result'></span>
+      </div>
+
+      <div class='small-form-entry'>
+        <label for='surface'>Surface:</label>
+        <input type='text' name='surface'>
+        <span class='result'></span>
+      </div>
+
+      <div class='small-form-entry'>
+        <label for='rooms'>Number of rooms:</label>
+        <input type='text' name='rooms'>
+        <span class='result'></span>
+      </div>
+
+      <div class='small-form-entry'>
+        <label for='bedrooms'>Number of bedrooms:</label>
+        <input type='text' name='bedrooms'>
+        <span class='result'></span>
+      </div>
+
+      <div class='small-form-entry'>
+        <label for='description'>Description:</label>
+        <input type='text' name='description'>
+        <span class='result'></span>
+      </div>
+
+      <div class='small-form-entry'>
+        <label for='address'>Address:</label>
+        <input type='text' name='address'>
+        <span class='result'></span>
+      </div>
+    </fieldset>
+
+    <div class='form-entry'>
+      <label for='rules-name'>
+        Name to save (or load) this set of rules:
+      </label>
+      <p class='note'>
+        Ex.: loquo<br />
+        (If you type a name and load the set of rules with this name, you
+        will lose any changes made on this page.)
+      </p>
+      <input type='text' name='rules-name' id='rules-name' />
+      <a href='#' id='load-rules'>Load</a>
+    </div>
+
+    <p class='bottom-form-buttons'>
+      <input type='submit' name='save' value='Save' />
+      or <a href='#' id='try-rules'>try these rules</a>
+    </p>
+  </form>
+{% endblock %}
