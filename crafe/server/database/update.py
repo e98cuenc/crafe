@@ -1,9 +1,10 @@
-import configuration
 import csv
 import logging
-import lookup
-import models
 import web
+
+from server import configuration
+from server.database import lookup
+from server.database import models
 
 
 db = None

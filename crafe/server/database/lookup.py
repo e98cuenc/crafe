@@ -1,8 +1,8 @@
-import configuration
-# import crafe.database.models
 import logging
-import models
 import web
+
+from server import configuration
+from server.database import models
 
 
 db = None

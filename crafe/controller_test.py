@@ -1,41 +1,41 @@
+import logging
 from nose import tools
 from paste import fixture
+import simplejson as json
 
 import controller
-import logging
+from server import testing
 
+
+app = None
 
 def setup():
-    controller.set_test_mode()
-
-def teardown():
-    pass
+    global app
+    controller.start_application('test')
+    app = fixture.TestApp(controller.app.wsgifunc())
 
 def test_index():
-    app = fixture.TestApp(controller.app.wsgifunc())
     r = app.get('/')
-    tools.assert_equal(r.status, 200)
-    tools.assert_equal(r.header('Content-Type'), 'text/html')
+    testing.parse_http_response(r, 'text/html')
     # r.mustcontain('foo')
 
 def test_css():
-    app = fixture.TestApp(controller.app.wsgifunc())
     for css_url in ['/css/screen.css']:
         r = app.get(css_url)
-        tools.assert_equal(r.status, 200)
-        tools.assert_equal(r.header('Content-Type'), 'text/css')
+        testing.parse_http_response(r, 'text/css')
 
 def test_js():
-    app = fixture.TestApp(controller.app.wsgifunc())
     for js_url in ['/js/index.js']:
         r = app.get(js_url)
-        tools.assert_equal(r.status, 200)
-        tools.assert_equal(r.header('Content-Type'), 'text/javascript')
+        testing.parse_http_response(r, 'text/javascript')
 
 def test_ajax():
-    ajax_urls = ['/ajax/load-rules']
-    app = fixture.TestApp(controller.app.wsgifunc())
+    ajax_urls = ['/ajax/load-rules?name=loquo']
     for ajax_url in ajax_urls:
-        r = app.get(js_url)
-        tools.assert_equal(r.status, 200)
-        tools.assert_equal(r.header('Content-Type'), 'application/json')
+        r = app.get(ajax_url)
+        testing.parse_http_response(r, 'application/json')
+
+def test_ajax_load_rules():
+    r = app.get('/ajax/load-rules?name=loquo')
+    json = testing.parse_http_response(r, 'application/json')
+    tools.assert_equal(json['name'], 'loquo')

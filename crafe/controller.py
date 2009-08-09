@@ -6,13 +6,13 @@ import web
 from web import utils
 from web.contrib import template
 
-import configuration
-from database import lookup
-from database import update
-import utils as my_utils
+from server import configuration
+from server.database import lookup
+from server.database import update
+from server import utils as my_utils
 
 
-_test_mode = False
+_server_mode = 'development'
 urls = ( '/', 'GenericPage',
         r'/(css|js|img)/(.*)', 'StaticFile',
          '/favicon.ico', 'StaticFavicon',
@@ -90,8 +90,15 @@ class AjaxLoadRules:
         return json.dumps(crawler_rule)
 
 
-def set_test_mode(test_mode=True):
-    _test_mode = test_mode
+def set_server_mode(mode='development'):
+    """Set the "mode" of the server.
+    
+    Args:
+        mode: (str) It can be any of 'test', 'development' or 'production'.
+    """
+    global _server_mode
+    assert(mode in ['test', 'development', 'production'])
+    _server_mode = mode
 
 
 def is_test():
@@ -101,13 +108,35 @@ def is_test():
     web.ctx.env['paste.testing'] because we want to know if we're in a test
     environment before we start a web server (to accelerate the tests).
     """
-    return _test_mode
+    return _server_mode == 'test'
+
+
+def is_development():
+    return _server_mode == 'development'
+
+
+def is_production():
+    return _server_mode == 'production'
+
+
+def start_application(mode='development'):
+    set_server_mode(mode)
+    if is_test():
+        configuration.DB_NAME = configuration.DB_NAME_TEST
+        # paste tests will complain if we display anything to the error logs,
+        # so we have to remove debug statements (like SQL queries) that webpy
+        # outputs by default.        
+        web.config.debug = False
+        update.init_db()
+    elif is_development():
+        update.init_db()
+        app.run()
+    elif is_production():
+        app.run()
+    else:
+        assert(False, 'controller._server_mode contains the invalid value'
+               ' \"%s\"' % _server_mode)
 
 
 if __name__ == "__main__":
-    if is_test():
-        configuration.DB_NAME = configuration.DB_NAME_TEST
-        update.init_db()
-    else:
-        update.init_db()
-        app.run()
+    start_application()
