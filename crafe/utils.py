@@ -1,4 +1,4 @@
-def safestr(obj):
+def safestr(obj, encodings_to_try=['utf-8', 'iso-8859-15']):
     r"""
     Converts any given object to utf-8 encoded string. 
 
@@ -18,10 +18,12 @@ def safestr(obj):
     if isinstance(obj, unicode):
         return obj.encode('utf-8')
     elif isinstance(obj, str):
-        try:
-            return obj.decode('utf-8').encode('utf-8')
-        except:
-            return obj.decode('iso-8859-15').encode('utf-8')
+        for encoding in encodings_to_try:
+            try:
+                return obj.decode(encoding).encode('utf-8')
+            except:
+                pass
+        return obj.decode('iso-8859-1').encode('utf-8')
     elif hasattr(obj, 'next') and hasattr(obj, '__iter__'): # iterator
         return itertools.imap(safestr, obj)
     else:

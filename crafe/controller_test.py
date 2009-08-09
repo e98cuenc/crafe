@@ -1,6 +1,7 @@
-import controller
 from nose import tools
 from paste import fixture
+
+import controller
 import logging
 
 
@@ -30,3 +31,11 @@ def test_js():
         r = app.get(js_url)
         tools.assert_equal(r.status, 200)
         tools.assert_equal(r.header('Content-Type'), 'text/javascript')
+
+def test_ajax():
+    ajax_urls = ['/ajax/load-rules']
+    app = fixture.TestApp(controller.app.wsgifunc())
+    for ajax_url in ajax_urls:
+        r = app.get(js_url)
+        tools.assert_equal(r.status, 200)
+        tools.assert_equal(r.header('Content-Type'), 'application/json')

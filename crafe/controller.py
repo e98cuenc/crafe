@@ -7,6 +7,8 @@ from web import utils
 from web.contrib import template
 
 import configuration
+from database import lookup
+from database import update
 import utils as my_utils
 
 
@@ -83,8 +85,9 @@ class AjaxLoadRules:
             raise utils.BadRequest()
 
         name = my_utils.safestr(user_data['name'])
+        crawler_rule = lookup.get_crawler_rule_by_name(name)
         web.header('Content-Type', 'application/json')
-        return json.dumps({'address': 'address of %s' % name, 'description': 'Nice flat'})
+        return json.dumps(crawler_rule)
 
 
 def set_test_mode(test_mode=True):
@@ -101,5 +104,10 @@ def is_test():
     return _test_mode
 
 
-if (not is_test()) and __name__ == "__main__":
-    app.run()
+if __name__ == "__main__":
+    if is_test():
+        configuration.DB_NAME = configuration.DB_NAME_TEST
+        update.init_db()
+    else:
+        update.init_db()
+        app.run()
