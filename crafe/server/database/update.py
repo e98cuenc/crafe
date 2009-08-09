@@ -3,21 +3,13 @@ import logging
 import web
 
 from server import configuration
+from server.database import connection
 from server.database import lookup
 from server.database import models
 
 
-db = None
-def connect_db():
-    global db
-    if not lookup.db:
-        lookup.connect_db()
-    assert(lookup.db)
-    db = lookup.db
-
-
 def init_db():
-    connect_db()
+    db = connection.get_db()
     if lookup.db_contains_production_data():
         logging.warning('Cowardly refusing to whipe a production db.')
         return
@@ -28,7 +20,7 @@ def init_db():
 
     
 def create_tables():
-    connect_db()
+    db = connection.get_db()
     db.query('CREATE TABLE "crawler_rules" ('
              '"name" TEXT PRIMARY KEY, '
              '"url_list_articles" BLOB, '
@@ -41,7 +33,7 @@ def create_tables():
 
 
 def fill_tables_with_testdata():
-    connect_db()
+    db = connection.get_db()
     db.insert('configuration', key='production', value=False)
     load_tables_from_csv()
 
@@ -58,7 +50,7 @@ def get_csv_filename_from_tablename(tablename):
 
 
 def load_tables_from_csv():
-    connect_db()
+    db = connection.get_db()
 
     f = open(get_csv_filename_from_tablename('crawler_rules'), 'r')
     csv_reader = csv.DictReader(f)
@@ -70,12 +62,21 @@ def load_tables_from_csv():
 
 
 def insert_crawler_rule(crawler_rule):
-    connect_db()
+    db = connection.get_db()
     db.insert('crawler_rules', seqname=None, **crawler_rule)
 
 
 def delete_all_tables():
-    connect_db()
+    """Delete all the tables of the currently opened db.
+    
+    TODO: This function only deletes permanent tables, it should also delete
+    temporary tables.
+    """
+    db = connection.get_db()
     tables = lookup.get_tables_in_db()
     for table in tables:
-        db.query('DROP TABLE $table_name', vars={'table_name': table.name})
+        # The commentted query gives the error:
+        # sqlite3.OperationalError: near "?": syntax error
+        # db.query('DROP TABLE $table_name', vars={'table_name': table.name})
+        # TODO: Find out what's wrong with the previous line
+        db.query('DROP TABLE %s' % table.name)

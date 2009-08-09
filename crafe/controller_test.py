@@ -1,7 +1,5 @@
-import logging
 from nose import tools
 from paste import fixture
-import simplejson as json
 
 import controller
 from server import testing
@@ -13,6 +11,11 @@ def setup():
     global app
     controller.start_application('test')
     app = fixture.TestApp(controller.app.wsgifunc())
+
+def teardown():
+    import os
+    from server import configuration
+    os.unlink(configuration.DB_NAME_TEST)
 
 def test_index():
     r = app.get('/')
